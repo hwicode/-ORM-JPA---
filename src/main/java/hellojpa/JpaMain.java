@@ -18,11 +18,12 @@ public class JpaMain {
         try {
 
             //영속
-            Member member = entityManager.find(Member.class, 150L);
-            member.setName("zzzzzz");
-//            entityManager.persist(member);
-            System.out.println("=======================");
+            Member member = new Member(200L, "member200");
+            entityManager.persist(member);
 
+            entityManager.flush();
+
+            System.out.println("=========================");
             transaction.commit();
         } catch (Exception e) {
             transaction.rollback();
