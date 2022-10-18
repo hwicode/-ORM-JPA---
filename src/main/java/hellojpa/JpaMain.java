@@ -17,13 +17,6 @@ public class JpaMain {
 
         try {
 
-            //영속
-            Member member = entityManager.find(Member.class, 200L);
-            member.setName("wwwww");
-
-            entityManager.detach(member);
-
-            System.out.println("=========================");
             transaction.commit();
         } catch (Exception e) {
             transaction.rollback();
