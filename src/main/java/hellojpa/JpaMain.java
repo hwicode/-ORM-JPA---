@@ -17,15 +17,21 @@ public class JpaMain {
         transaction.begin();
 
         try {
-//            Member findMember = entityManager.find(Member.class, 1L);
-            List<Member> members = entityManager.createQuery("select m from Member as m", Member.class)
-                    .setFirstResult(1)
-                    .setMaxResults(8)
-                    .getResultList();
 
-            for (Member member : members) {
-                System.out.println("member.getName() = " + member.getName());
-            }
+            //비영속
+            Member member = new Member();
+            member.setId(101L);
+            member.setName("HelloJPA");
+
+            //영속
+            System.out.println("==== BEFORE ====");
+            entityManager.persist(member);
+            System.out.println("==== AFTER ====");
+
+            Member findMember = entityManager.find(Member.class, 101L);
+
+            System.out.println("findMember.getName() = " + findMember.getName());
+            System.out.println("findMember.getId() = " + findMember.getId());
 
             transaction.commit();
         } catch (Exception e) {
