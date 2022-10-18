@@ -18,10 +18,10 @@ public class JpaMain {
         try {
 
             //영속
-            Member member = new Member(200L, "member200");
-            entityManager.persist(member);
+            Member member = entityManager.find(Member.class, 200L);
+            member.setName("wwwww");
 
-            entityManager.flush();
+            entityManager.detach(member);
 
             System.out.println("=========================");
             transaction.commit();
