@@ -16,19 +16,19 @@ public class JpaMain {
         transaction.begin();
 
         try {
+            Team team = new Team();
+            team.setName("TeamA");
+            entityManager.persist(team);
 
-//            Member member = new Member();
-//            member.setUserName("wqewqe");
-//
-//            entityManager.persist(member);
-            Member member = entityManager.find(Member.class, 1L);
-            System.out.println("====================================");
-            entityManager.remove(member);
-            System.out.println("=============================");
-            Member member1 = entityManager.find(Member.class, 1L);
-            System.out.println("member1 = " + member1);
-            System.out.println("member1.getUserName() = " + member1.getUserName());
-            System.out.println("member1.getClass() = " + member1.getClass());
+            Member member = new Member();
+            member.setUserName("member1");
+            member.setTeam(team);
+            entityManager.persist(member);
+
+            Member findMember = entityManager.find(Member.class, member.getId());
+            Team findTeam = findMember.getTeam();
+
+            System.out.println("findTeam.getClass() = " + findTeam.getClass());
 
             transaction.commit();
         } catch (Exception e) {
