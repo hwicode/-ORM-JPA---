@@ -3,7 +3,7 @@ package hellojpa;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@Entity
+@Entity(name = "MEMBER_PRODUCT")
 public class MemberProduct {
 
     @Id @GeneratedValue
