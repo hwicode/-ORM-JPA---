@@ -1,8 +1,6 @@
 package hellojpa;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 public class Member extends BaseEntity {
@@ -14,16 +12,15 @@ public class Member extends BaseEntity {
     @Column(name = "USERNAME")
     private String userName;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "TEAM_ID")
-    private Team team;
-
     @OneToOne
     @JoinColumn(name = "LOCKER_ID")
     private Locker locker;
 
-    @OneToMany(mappedBy = "member")
-    private List<MemberProduct> memberProducts = new ArrayList<>();
+    @Embedded
+    private Address homeAddress;
+
+    @Embedded
+    private Period workPeriod;
 
     public Long getId() {
         return id;
@@ -41,14 +38,6 @@ public class Member extends BaseEntity {
         this.userName = userName;
     }
 
-    public Team getTeam() {
-        return team;
-    }
-
-    public void setTeam(Team team) {
-        this.team = team;
-    }
-
     public Locker getLocker() {
         return locker;
     }
@@ -57,11 +46,19 @@ public class Member extends BaseEntity {
         this.locker = locker;
     }
 
-    public List<MemberProduct> getMemberProducts() {
-        return memberProducts;
+    public Address getHomeAddress() {
+        return homeAddress;
     }
 
-    public void setMemberProducts(List<MemberProduct> memberProducts) {
-        this.memberProducts = memberProducts;
+    public void setHomeAddress(Address homeAddress) {
+        this.homeAddress = homeAddress;
+    }
+
+    public Period getWorkPeriod() {
+        return workPeriod;
+    }
+
+    public void setWorkPeriod(Period workPeriod) {
+        this.workPeriod = workPeriod;
     }
 }
