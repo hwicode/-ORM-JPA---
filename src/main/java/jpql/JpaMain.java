@@ -43,15 +43,20 @@ public class JpaMain {
             entityManager.flush();
             entityManager.clear();
 
-            String query = "select m from Member m join fetch m.team";
+            String query = "select distinct t from Team t join fetch t.members";
 
-            List<Member> resultList = entityManager.createQuery(query, Member.class)
+            List<Team> resultList = entityManager.createQuery(query, Team.class)
                     .getResultList();
 
             System.out.println("==============================");
 
-            for (Member x : resultList) {
-                System.out.println("x.getName() = " + x.getTeam().getName());
+            for (Team team : resultList) {
+                System.out.println("team.getMembers().size() = " + team.getMembers().size());
+                System.out.println("team.getName() = " + team.getName());
+
+                for (Member member : team.getMembers()) {
+                    System.out.println("member.getUserName() = " + member.getUserName());
+                }
             }
 
             transaction.commit();
