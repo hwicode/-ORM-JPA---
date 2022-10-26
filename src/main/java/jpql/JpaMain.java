@@ -4,6 +4,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
+import java.util.List;
 
 public class JpaMain {
 
@@ -16,55 +17,42 @@ public class JpaMain {
         transaction.begin();
 
         try {
-            Member member = new Member();
-            member.setUserName("member1");
-            entityManager.persist(member);
+            Team teamA = new Team();
+            teamA.setName("teamA");
+            entityManager.persist(teamA);
+
+            Team teamB = new Team();
+            teamB.setName("teamB");
+            entityManager.persist(teamB);
+
+            Member member1 = new Member();
+            member1.setUserName("member1");
+            member1.setTeam(teamA);
+            entityManager.persist(member1);
+
+            Member member2 = new Member();
+            member2.setUserName("member2");
+            member2.setTeam(teamA);
+            entityManager.persist(member2);
+
+            Member member3 = new Member();
+            member3.setUserName("member3");
+            member3.setTeam(teamB);
+            entityManager.persist(member3);
 
             entityManager.flush();
             entityManager.clear();
 
-            entityManager.createQuery("select m from Member m order by m.age desc", Member.class)
-                            .setFirstResult(1)
-                            .setMaxResults(10)
-                            .getResultList();
+            String query = "select m from Member m join fetch m.team";
 
-            entityManager.createQuery("select m from Member m join m.team t", Member.class)
-                            .getResultList();
+            List<Member> resultList = entityManager.createQuery(query, Member.class)
+                    .getResultList();
 
-            entityManager.createQuery("select count(m) from Member m, Team t where m.userName = t.name", Member.class)
-                            .getResultList();
+            System.out.println("==============================");
 
-            entityManager.createQuery("select m, t from Member m left join m.team t on t.name = 'A'", Member.class)
-                            .getResultList();
-
-            entityManager.createQuery("select m, t from Member m left join Team t on m.userName = t.name", Member.class)
-                            .getResultList();
-
-            entityManager.createQuery("select m from Member m where m.age > (select avg(m2.age) from Member m2)", Member.class)
-                            .getResultList();
-
-            entityManager.createQuery("select m from Member m where (select count(o) from Order o where m = o.member) > 0", Member.class)
-                            .getResultList();
-
-            entityManager.createQuery("select m from Member m where exists (select t from m.team t where t.name = 'teamA'")
-                            .getResultList();
-
-            entityManager.createQuery("select o from Order o where o.orderAmount > ALL (select p.stockAmount from Product p)", Order.class)
-                            .getResultList();
-
-            entityManager.createQuery("select m from Member m where m.team = ANY (select t from Team t)", Member.class)
-                            .getResultList();
-
-            String jqpl1 = "select " +
-                            "case when m.age <= 10 then '학생요금' " +
-                            "     when m.age >= 60 then '경로요금' " +
-                            "     else '일반요금' " +
-                            "end " +
-                          "from Member m";
-
-            String jqpl2 = "select coalesce(m.userName, '이름 없는 회원') from Member m";
-
-            String jpql3 = "select NULLIF(m.userName, '관리자') from Member m";
+            for (Member x : resultList) {
+                System.out.println("x.getName() = " + x.getTeam().getName());
+            }
 
             transaction.commit();
         } catch (Exception e) {
